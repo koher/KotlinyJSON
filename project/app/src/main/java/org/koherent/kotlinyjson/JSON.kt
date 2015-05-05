@@ -57,10 +57,13 @@ public class JSON {
 
     private fun getJSONObject(): JSONObject? {
         if (jsonObject !is JSONObject) {
-            if (name is String) {
-                jsonObject = parent?.getJSONObject()?.getJSONObject(name)
-            } else if (index is Int) {
-                jsonObject = parent?.getJSONArray()?.getJSONObject(index!!)
+            try {
+                if (name is String) {
+                    jsonObject = parent?.getJSONObject()?.getJSONObject(name)
+                } else if (index is Int) {
+                    jsonObject = parent?.getJSONArray()?.getJSONObject(index!!)
+                }
+            } catch(e: JSONException) {
             }
         }
 
@@ -69,10 +72,13 @@ public class JSON {
 
     private fun getJSONArray(): JSONArray? {
         if (jsonArray !is JSONArray) {
-            if (name is String) {
-                jsonArray = parent?.getJSONObject()?.getJSONArray(name)
-            } else if (index is Int) {
-                jsonArray = parent?.getJSONArray()?.getJSONArray(index!!)
+            try {
+                if (name is String) {
+                    jsonArray = parent?.getJSONObject()?.getJSONArray(name)
+                } else if (index is Int) {
+                    jsonArray = parent?.getJSONArray()?.getJSONArray(index!!)
+                }
+            } catch(e: JSONException) {
             }
         }
 
@@ -81,57 +87,72 @@ public class JSON {
 
     public val boolean: Boolean?
         get() {
-            if (name is String) {
-                return parent?.getJSONObject()?.getBoolean(name)
-            } else if (index is Int) {
-                return parent?.getJSONArray()?.getBoolean(index!!)
-            } else {
-                return null
+            try {
+                if (name is String) {
+                    return parent?.getJSONObject()?.getBoolean(name)
+                } else if (index is Int) {
+                    return parent?.getJSONArray()?.getBoolean(index!!)
+                }
+            } catch(e: JSONException) {
             }
+
+            return null
         }
 
     public val int: Int?
         get() {
-            if (name is String) {
-                return parent?.getJSONObject()?.getInt(name)
-            } else if (index is Int) {
-                return parent?.getJSONArray()?.getInt(index!!)
-            } else {
-                return null
+            try {
+                if (name is String) {
+                    return parent?.getJSONObject()?.getInt(name)
+                } else if (index is Int) {
+                    return parent?.getJSONArray()?.getInt(index!!)
+                }
+            } catch(e: JSONException) {
             }
+
+            return null
         }
 
     public val long: Long?
         get() {
-            if (name is String) {
-                return parent?.getJSONObject()?.getLong(name)
-            } else if (index is Int) {
-                return parent?.getJSONArray()?.getLong(index!!)
-            } else {
-                return null
+            try {
+                if (name is String) {
+                    return parent?.getJSONObject()?.getLong(name)
+                } else if (index is Int) {
+                    return parent?.getJSONArray()?.getLong(index!!)
+                }
+            } catch(e: JSONException) {
             }
+
+            return null
         }
 
     public val double: Double?
         get() {
-            if (name is String) {
-                return parent?.getJSONObject()?.getDouble(name)
-            } else if (index is Int) {
-                return parent?.getJSONArray()?.getDouble(index!!)
-            } else {
-                return null
+            try {
+                if (name is String) {
+                    return parent?.getJSONObject()?.getDouble(name)
+                } else if (index is Int) {
+                    return parent?.getJSONArray()?.getDouble(index!!)
+                }
+            } catch(e: JSONException) {
             }
+
+            return null
         }
 
     public val string: String?
         get() {
-            if (name is String) {
-                return parent?.getJSONObject()?.getString(name)
-            } else if (index is Int) {
-                return parent?.getJSONArray()?.getString(index!!)
-            } else {
-                return null
+            try {
+                if (name is String) {
+                    return parent?.getJSONObject()?.getString(name)
+                } else if (index is Int) {
+                    return parent?.getJSONArray()?.getString(index!!)
+                }
+            } catch(e: JSONException) {
             }
+
+            return null
         }
 
     public val list: List<JSON>?
