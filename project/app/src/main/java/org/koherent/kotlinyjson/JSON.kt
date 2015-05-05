@@ -1,3 +1,5 @@
+package org.koherent.kotlinyjson
+
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
