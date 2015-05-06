@@ -15,6 +15,8 @@ public class JSON {
     private var name: String?
     private var index: Int?
 
+    private var value: Any?
+
     init {
         jsonObject = null
         jsonArray = null
@@ -22,10 +24,12 @@ public class JSON {
         parent = null
         name = null
         index = null
+
+        value = null
     }
 
     public constructor(data: ByteArray) {
-        val string: String = java.lang.String(data, "UTF-8").toString()
+        val string = String(data, Charsets.UTF_8)
 
         try {
             jsonObject = JSONObject(string)
@@ -33,6 +37,14 @@ public class JSON {
             try {
                 jsonArray = JSONArray(string)
             } catch (e2: JSONException) {
+                try {
+                    val parent = JSON("[$string]".toByteArray(Charsets.UTF_8))
+                    if (parent.getJSONArray()?.length() == 1) {
+                        this.parent = parent
+                        index = 0
+                    }
+                } catch (e3: JSONException) {
+                }
             }
         }
     }
@@ -92,32 +104,51 @@ public class JSON {
 
     public val boolean: Boolean?
         get() {
-            return getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
+            if (value == null) {
+                value = getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
+            }
+            return value as? Boolean
         }
 
     public val int: Int?
         get() {
-            return getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
+            if (value == null) {
+                value = getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
+            }
+            return value as? Int
         }
 
     public val long: Long?
         get() {
-            return getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
+            if (value == null) {
+                value = getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
+            }
+            return value as? Long
         }
 
     public val double: Double?
         get() {
-            return getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
+            if (value == null) {
+                value = getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
+            }
+            return value as? Double
         }
 
     public val string: String?
         get() {
-            return getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
+            if (value == null) {
+                value = getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
+            }
+            return value as? String
         }
 
     public val list: List<JSON>?
         get() {
-            val length = getJSONArray()?.length()
+            if (value == null) {
+                value = getJSONArray()
+            }
+
+            val length = (value as? JSONArray)?.length()
             if (length is Int) {
                 val result = ArrayList<JSON>()
                 for (index in 0..(length - 1)) {
@@ -131,7 +162,11 @@ public class JSON {
 
     public val map: Map<String, JSON>?
         get() {
-            val names = getJSONObject()?.keys()
+            if (value == null) {
+                value = getJSONObject()
+            }
+
+            val names = (value as? JSONObject)?.keys()
             if (names is Iterator<String>) {
                 val result = HashMap<String, JSON>()
                 while (names.hasNext()) {
@@ -144,7 +179,6 @@ public class JSON {
                 return null
             }
         }
-
 }
 
 public val JSON.booleanValue: Boolean
