@@ -49,6 +49,34 @@ public class JSON {
         }
     }
 
+    public constructor(value: Boolean) {
+        this.value = value
+    }
+
+    public constructor(value: Int) {
+        this.value = value
+    }
+
+    public constructor(value: Long) {
+        this.value = value
+    }
+
+    public constructor(value: Double) {
+        this.value = value
+    }
+
+    public constructor(value: String) {
+        this.value = value
+    }
+
+    public constructor(value: List<JSON>) {
+        this.value = value
+    }
+
+    public constructor(value: Map<String, JSON>) {
+        this.value = value
+    }
+
     private constructor(parent: JSON, name: String) {
         this.parent = parent
         this.name = name
@@ -145,39 +173,34 @@ public class JSON {
     public val list: List<JSON>?
         get() {
             if (value == null) {
-                value = getJSONArray()
+                val length =getJSONArray()?.length()
+                if (length is Int) {
+                    val result = ArrayList<JSON>()
+                    for (index in 0..(length - 1)) {
+                        result.add(JSON(this, index))
+                    }
+                    value = result
+                }
             }
 
-            val length = (value as? JSONArray)?.length()
-            if (length is Int) {
-                val result = ArrayList<JSON>()
-                for (index in 0..(length - 1)) {
-                    result.add(JSON(this, index))
-                }
-                return result
-            } else {
-                return null
-            }
+            return value as? List<JSON>
         }
 
     public val map: Map<String, JSON>?
         get() {
             if (value == null) {
-                value = getJSONObject()
-            }
-
-            val names = (value as? JSONObject)?.keys()
-            if (names is Iterator<String>) {
-                val result = HashMap<String, JSON>()
-                while (names.hasNext()) {
-                    val name = names.next()
-                    result.put(name, this[name])
+                val names = getJSONObject()?.keys()
+                if (names is Iterator<String>) {
+                    val result = HashMap<String, JSON>()
+                    while (names.hasNext()) {
+                        val name = names.next()
+                        result.put(name, this[name])
+                    }
+                    value = result
                 }
-
-                return result
-            } else {
-                return null
             }
+
+            return value as? Map<String, JSON>
         }
 }
 
@@ -195,3 +218,9 @@ public val JSON.doubleValue: Double
 
 public val JSON.stringValue: String
     get() = string!!
+
+public val JSON.listValue: List<JSON>
+    get() = list!!
+
+public val JSON.mapValue: Map<String, JSON>
+    get() = map!!
