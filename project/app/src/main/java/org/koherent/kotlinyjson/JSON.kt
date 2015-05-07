@@ -15,8 +15,6 @@ public class JSON {
     private var name: String?
     private var index: Int?
 
-    private var value: Any?
-
     init {
         jsonObject = null
         jsonArray = null
@@ -24,8 +22,6 @@ public class JSON {
         parent = null
         name = null
         index = null
-
-        value = null
     }
 
     public constructor(data: ByteArray) {
@@ -50,31 +46,44 @@ public class JSON {
     }
 
     public constructor(value: Boolean) {
-        this.value = value
+        val jsonArray = JSONArray()
+        jsonArray.put(value)
+        parent = JSON(jsonArray)
+        index = 0
     }
 
     public constructor(value: Int) {
-        this.value = value
+        val jsonArray = JSONArray()
+        jsonArray.put(value)
+        parent = JSON(jsonArray)
+        index = 0
     }
 
     public constructor(value: Long) {
-        this.value = value
+        val jsonArray = JSONArray()
+        jsonArray.put(value)
+        parent = JSON(jsonArray)
+        index = 0
     }
 
     public constructor(value: Double) {
-        this.value = value
+        val jsonArray = JSONArray()
+        jsonArray.put(value)
+        parent = JSON(jsonArray)
+        index = 0
     }
 
     public constructor(value: String) {
-        this.value = value
+        val jsonArray = JSONArray()
+        jsonArray.put(value)
+        parent = JSON(jsonArray)
+        index = 0
     }
 
-    public constructor(value: List<JSON>) {
-        this.value = value
+    public constructor(value: List<JSON>) : this(("[" + value.map { it.rawString() ?: "" /* will create illegal JSON String */ }.join(",") + "]").toByteArray(Charsets.UTF_8)) {
     }
 
-    public constructor(value: Map<String, JSON>) {
-        this.value = value
+    public constructor(value: Map<String, JSON>) : this(("{" + value.map { JSONObject.quote(it.key) + ":" + it.value.rawString() ?: "" }.join(",") + "}").toByteArray(Charsets.UTF_8)) {
     }
 
     private constructor(parent: JSON, name: String) {
@@ -85,6 +94,10 @@ public class JSON {
     private constructor(parent: JSON, index: Int) {
         this.parent = parent
         this.index = index
+    }
+
+    private constructor(jsonArray: JSONArray) {
+        this.jsonArray = jsonArray
     }
 
     public fun get(name: String): JSON {
@@ -132,75 +145,56 @@ public class JSON {
 
     public val boolean: Boolean?
         get() {
-            if (value == null) {
-                value = getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
-            }
-            return value as? Boolean
+            return getValue({ o, n -> o.getBoolean(n) }, { a, i -> a.getBoolean(i) })
         }
 
     public val int: Int?
         get() {
-            if (value == null) {
-                value = getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
-            }
-            return value as? Int
+            return getValue({ o, n -> o.getInt(n) }, { a, i -> a.getInt(i) })
         }
 
     public val long: Long?
         get() {
-            if (value == null) {
-                value = getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
-            }
-            return value as? Long
+            return getValue({ o, n -> o.getLong(n) }, { a, i -> a.getLong(i) })
         }
 
     public val double: Double?
         get() {
-            if (value == null) {
-                value = getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
-            }
-            return value as? Double
+            return getValue({ o, n -> o.getDouble(n) }, { a, i -> a.getDouble(i) })
         }
 
     public val string: String?
         get() {
-            if (value == null) {
-                value = getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
-            }
-            return value as? String
+            return getValue({ o, n -> o.getString(n) }, { a, i -> a.getString(i) })
         }
 
     public val list: List<JSON>?
         get() {
-            if (value == null) {
-                val length =getJSONArray()?.length()
-                if (length is Int) {
-                    val result = ArrayList<JSON>()
-                    for (index in 0..(length - 1)) {
-                        result.add(JSON(this, index))
-                    }
-                    value = result
+            val length = getJSONArray()?.length()
+            if (length is Int) {
+                val result = ArrayList<JSON>()
+                for (index in 0..(length - 1)) {
+                    result.add(JSON(this, index))
                 }
+                return result
+            } else {
+                return null
             }
-
-            return value as? List<JSON>
         }
 
     public val map: Map<String, JSON>?
         get() {
-            if (value == null) {
-                val names = getJSONObject()?.keys()
-                if (names is Iterator<String>) {
-                    val result = HashMap<String, JSON>()
-                    while (names.hasNext()) {
-                        val name = names.next()
-                        result.put(name, this[name])
-                    }
-                    value = result
+            val names = getJSONObject()?.keys()
+            if (names is Iterator<String>) {
+                val result = HashMap<String, JSON>()
+                while (names.hasNext()) {
+                    val name = names.next()
+                    result.put(name, this[name])
                 }
+                return result
+            } else {
+                return null
             }
-
-            return value as? Map<String, JSON>
         }
 
     public fun rawString(): String? {
