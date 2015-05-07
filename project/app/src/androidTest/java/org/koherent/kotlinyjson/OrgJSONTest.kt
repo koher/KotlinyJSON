@@ -1,6 +1,7 @@
 package org.koherent.kotlinyjson
 
 import junit.framework.TestCase
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import kotlin.test.assertEquals
@@ -48,5 +49,33 @@ public class OrgJSONTest: TestCase() {
         assertEquals(true, json.has("a"))
         assertEquals(true, json.isNull("b"))
         assertEquals(false, json.has("b"))
+    }
+
+    public fun testNumberConversion() {
+        if (true) {
+            val json = JSONArray("""[123]""")
+            assertEquals(123, json.getInt(0))
+            assertEquals(123L, json.getLong(0))
+            assertEquals(123.0, json.getDouble(0))
+            assertEquals("123", json.getString(0))
+            try {
+                json.getBoolean(0)
+                fail()
+            } catch(e: JSONException) {
+            }
+        }
+
+        if (true) {
+            val json = JSONArray("""[2.5]""")
+            assertEquals(2, json.getInt(0))
+            assertEquals(2L, json.getLong(0))
+            assertEquals(2.5, json.getDouble(0))
+            assertEquals("2.5", json.getString(0))
+            try {
+                json.getBoolean(0)
+                fail()
+            } catch(e: JSONException) {
+            }
+        }
     }
 }

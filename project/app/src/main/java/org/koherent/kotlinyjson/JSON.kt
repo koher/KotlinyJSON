@@ -202,6 +202,46 @@ public class JSON {
 
             return value as? Map<String, JSON>
         }
+
+    public fun rawString(): String? {
+        val jsonObject = getJSONObject()
+        if (jsonObject != null) {
+            return jsonObject.toString()
+        }
+
+        val jsonArray = getJSONArray()
+        if (jsonArray != null) {
+            return jsonArray.toString()
+        }
+
+        val booleanValue = boolean
+        if (booleanValue != null) {
+            return booleanValue.toString()
+        }
+
+        val doubleValue = double
+        if (doubleValue != null) {
+            if (doubleValue.toLong().toDouble() != doubleValue) { // has decimals
+                return doubleValue.toString()
+            }
+        }
+
+        val longValue = long // int is included
+        if (longValue != null) {
+            return longValue.toString()
+        }
+
+        val stringValue = string
+        if (stringValue != null) {
+            return JSONObject.quote(stringValue)
+        }
+
+        return null
+    }
+
+    override public fun toString(): String {
+        return rawString() ?: ""
+    }
 }
 
 public val JSON.booleanValue: Boolean
