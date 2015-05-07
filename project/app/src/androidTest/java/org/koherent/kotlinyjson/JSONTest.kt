@@ -1,13 +1,18 @@
 package org.koherent.kotlinyjson
 
 import junit.framework.TestCase
+import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
 public class JSONTest: TestCase() {
     public fun testBasic() {
-        val json = JSON("""{"foo":{"bar":true},"baz":["abc",{"qux":[2,3.0]}]}""".toByteArray(Charsets.UTF_8))
+        doTestBasic(JSON(basicJSONString.toByteArray(Charsets.UTF_8)))
+    }
 
+    private val basicJSONString: String = """{"foo":{"bar":true},"baz":["abc",{"qux":[2,3.0]}]}"""
+
+    private fun doTestBasic(json: JSON) {
         assertEquals(true, json["foo"]["bar"].boolean)
         assertEquals("abc", json["baz"][0].string)
         assertEquals(2, json["baz"][1]["qux"][0].int)
@@ -111,6 +116,10 @@ public class JSONTest: TestCase() {
             assertEquals(3.0, map["bar"]!!.doubleValue)
             assertEquals("5", map["baz"]!!.stringValue)
         }
+    }
+
+    public fun testConstructorForInputStream() {
+        doTestBasic(JSON(ByteArrayInputStream(basicJSONString.toByteArray(Charsets.UTF_8))))
     }
 
     public fun testRawString() {

@@ -3,7 +3,9 @@ package org.koherent.kotlinyjson
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.IOException
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -24,8 +26,8 @@ public class JSON {
         index = null
     }
 
-    public constructor(data: ByteArray) {
-        val string = String(data, Charsets.UTF_8)
+    public constructor(bytes: ByteArray) {
+        val string = String(bytes, Charsets.UTF_8)
 
         try {
             jsonObject = JSONObject(string)
@@ -43,6 +45,9 @@ public class JSON {
                 }
             }
         }
+    }
+
+    public constructor(inputStream: InputStream) : this(inputStreamToByteArray(inputStream) ?: ByteArray(0)) {
     }
 
     public constructor(value: Boolean) {
@@ -258,3 +263,23 @@ public val JSON.listValue: List<JSON>
 
 public val JSON.mapValue: Map<String, JSON>
     get() = map!!
+
+private fun inputStreamToByteArray(inputStream: InputStream): ByteArray? {
+    try {
+        val buffer = ByteArray(0x1000)
+        val outputStream = ByteArrayOutputStream()
+
+        while (true) {
+            val length = inputStream.read(buffer)
+            if (length < 0) {
+                break
+            }
+
+            outputStream.write(buffer, 0, length)
+        }
+
+        return outputStream.toByteArray()
+    } catch (e: IOException) {
+        return null
+    }
+}
