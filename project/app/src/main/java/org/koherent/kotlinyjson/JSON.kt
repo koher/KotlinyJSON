@@ -202,6 +202,10 @@ public class JSON {
             }
         }
 
+    public fun rawBytes(): ByteArray? {
+        return rawString()?.toByteArray(Charsets.UTF_8)
+    }
+
     public fun rawString(): String? {
         val jsonObject = getJSONObject()
         if (jsonObject != null) {

@@ -122,6 +122,11 @@ public class JSONTest: TestCase() {
         doTestBasic(JSON(ByteArrayInputStream(basicJSONString.toByteArray(Charsets.UTF_8))))
     }
 
+    public fun testRawBytes() {
+        val bytes = JSON(basicJSONString.toByteArray(Charsets.UTF_8)).rawBytes()!!
+        doTestBasic(JSON(bytes))
+    }
+
     public fun testRawString() {
         if (true) { // Boolean
             val json = JSON("true".toByteArray(Charsets.UTF_8))
