@@ -86,10 +86,10 @@ public class JSON {
         index = 0
     }
 
-    public constructor(value: List<JSON>) : this(("[" + value.map { it.rawString() ?: "" /* will create illegal JSON String */ }.join(",") + "]").toByteArray(Charsets.UTF_8)) {
+    public constructor(value: List<JSON>) : this(("[" + value.map { it.rawString() ?: "" /* will create illegal JSON String */ }.joinToString(",") + "]").toByteArray(Charsets.UTF_8)) {
     }
 
-    public constructor(value: Map<String, JSON>) : this(("{" + value.map { JSONObject.quote(it.key) + ":" + (it.value.rawString() ?: "") }.join(",") + "}").toByteArray(Charsets.UTF_8)) {
+    public constructor(value: Map<String, JSON>) : this(("{" + value.map { JSONObject.quote(it.key) + ":" + (it.value.rawString() ?: "") }.joinToString(",") + "}").toByteArray(Charsets.UTF_8)) {
     }
 
     private constructor(parent: JSON, name: String) {
@@ -106,11 +106,11 @@ public class JSON {
         this.jsonArray = jsonArray
     }
 
-    public fun get(name: String): JSON {
+    public operator fun get(name: String): JSON {
         return JSON(this, name)
     }
 
-    public fun get(index: Int): JSON {
+    public operator fun get(index: Int): JSON {
         return JSON(this, index)
     }
 
@@ -195,7 +195,7 @@ public class JSON {
                 val result = HashMap<String, JSON>()
                 while (names.hasNext()) {
                     val name = names.next()
-                    result.put(name, this[name])
+                    result.put(name, this.get(name))
                 }
                 return result
             } else {
