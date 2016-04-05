@@ -106,11 +106,11 @@ public class JSON {
         this.jsonArray = jsonArray
     }
 
-    public fun get(name: String): JSON {
+    public operator fun get(name: String): JSON {
         return JSON(this, name)
     }
 
-    public fun get(index: Int): JSON {
+    public operator fun get(index: Int): JSON {
         return JSON(this, index)
     }
 
