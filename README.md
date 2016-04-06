@@ -1,7 +1,7 @@
 KotlinyJSON
 =====================
 
-_KotlinyJSON_ is a JSON parser for Kotlin which has __similar APIs to [_SwiftyJSON_](https://github.com/SwiftyJSON/SwiftyJSON)__
+_KotlinyJSON_ is a thin wrapper of [_org.json_](https://github.com/stleary/JSON-java) to decode JSONs in Kotlin, which has __similar APIs to [_SwiftyJSON_](https://github.com/SwiftyJSON/SwiftyJSON)__
 
 ```kotlin
 import org.koherent.kotlinyjson.JSON
