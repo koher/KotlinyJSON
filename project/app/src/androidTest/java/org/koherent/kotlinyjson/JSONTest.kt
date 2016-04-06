@@ -259,11 +259,6 @@ public class JSONTest: TestCase() {
             val json = JSON("""""""".toByteArray())
             assertEquals("", json.stringValue)
         }
-
-        if (true) {
-            val json = JSON("""null""".toByteArray())
-            assertEquals("", json.stringValue)
-        }
     }
 
     public fun testListValue() {
