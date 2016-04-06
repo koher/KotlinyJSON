@@ -249,25 +249,25 @@ public class JSON {
 }
 
 public val JSON.booleanValue: Boolean
-    get() = boolean!!
+    get() = boolean ?: false
 
 public val JSON.intValue: Int
-    get() = int!!
+    get() = int ?: 0
 
 public val JSON.longValue: Long
-    get() = long!!
+    get() = long ?: 0L
 
 public val JSON.doubleValue: Double
-    get() = double!!
+    get() = double ?: 0.0
 
 public val JSON.stringValue: String
-    get() = string!!
+    get() = string ?: ""
 
 public val JSON.listValue: List<JSON>
-    get() = list!!
+    get() = list ?: listOf()
 
 public val JSON.mapValue: Map<String, JSON>
-    get() = map!!
+    get() = map ?: mapOf()
 
 private fun inputStreamToByteArray(inputStream: InputStream, closeWhenDone: Boolean = false): ByteArray? {
     try {
