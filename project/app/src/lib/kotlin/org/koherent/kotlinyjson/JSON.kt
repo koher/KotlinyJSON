@@ -246,6 +246,74 @@ public class JSON {
     override public fun toString(): String {
         return rawString() ?: ""
     }
+
+    override public fun equals(another: Any?): Boolean {
+        if (!(another is JSON)) {
+            return false
+        }
+
+        val list1 = list
+        if (list1 != null) {
+            val list2 = another.list
+            if (list2 != null) {
+                return list1 == list2
+            } else {
+                return false
+            }
+        }
+
+        val map1 = map
+        if (map1 != null) {
+            val map2 = another.map
+            if (map2 != null) {
+                return map1 == map2
+            } else {
+                return false
+            }
+        }
+
+        val boolean1 = boolean
+        if (boolean1 != null) {
+            val boolean2 = another.boolean
+            if (boolean2 != null) {
+                return boolean1 == boolean2
+            } else {
+                return false
+            }
+        }
+
+        val double1 = double
+        if (double1 != null) {
+            if (double1.toLong().toDouble() != double1) {
+                val double2 = another.double
+                if (double2 != null) {
+                    return double1 == double2
+                }
+            }
+        }
+
+        val long1 = long
+        if (long1 != null) {
+            val long2 = another.long
+            if (long2 != null) {
+                return long1 == long2
+            } else {
+                return false
+            }
+        }
+
+        val string1 = string
+        if (string1 != null) {
+            val string2 = another.string
+            if (string2 != null) {
+                return string1 == string2
+            } else {
+                return false
+            }
+        }
+
+        return true // null == null
+    }
 }
 
 public val JSON.booleanValue: Boolean

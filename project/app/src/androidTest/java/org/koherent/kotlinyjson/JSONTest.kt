@@ -3,6 +3,7 @@ package org.koherent.kotlinyjson
 import junit.framework.TestCase
 import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.fail
 
 public class JSONTest: TestCase() {
@@ -268,6 +269,8 @@ public class JSONTest: TestCase() {
     public fun testListValue() {
         if (true) {
             val json = JSON("""[2, 3, 5]""".toByteArray())
+            assertEquals(JSON(2), JSON(2))
+            assertEquals(listOf(JSON(2), JSON(3), JSON(5)), listOf(JSON(2), JSON(3), JSON(5)))
             assertEquals(listOf(JSON(2), JSON(3), JSON(5)), json.listValue)
         }
 
@@ -297,5 +300,26 @@ public class JSONTest: TestCase() {
             val json = JSON("""null""".toByteArray())
             assertEquals(mapOf<String, Int>(), json.mapValue)
         }
+    }
+
+    public fun testEquals() {
+        assertEquals(JSON(true), JSON(true))
+        assertEquals(JSON(42), JSON(42))
+        assertEquals(JSON(42L), JSON(42L))
+        assertEquals(JSON(42.0), JSON(42.0))
+        assertEquals(JSON("KotlinyJSON"), JSON("KotlinyJSON"))
+        assertEquals(JSON(listOf(JSON(2), JSON(3), JSON(5))), JSON(listOf(JSON(2), JSON(3), JSON(5))))
+        assertEquals(JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))), JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))))
+        assertEquals(JSON("null".toByteArray()), JSON("null".toByteArray()))
+
+        assertFalse(JSON(true)== JSON(false))
+        assertFalse(JSON(42)== JSON(0))
+        assertFalse(JSON(42L)== JSON(0L))
+        assertFalse(JSON(42.0)== JSON(0.0))
+        assertFalse(JSON("KotlinyJSON") == JSON(""))
+        assertFalse(JSON(listOf(JSON(2), JSON(3), JSON(5))) == JSON(listOf()))
+        assertFalse(JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))) == JSON(mapOf()))
+        assertFalse(JSON("null".toByteArray()) == JSON(false))
+
     }
 }
