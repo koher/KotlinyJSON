@@ -3,6 +3,7 @@ package org.koherent.kotlinyjson
 import junit.framework.TestCase
 import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.fail
 
 public class JSONTest: TestCase() {
@@ -178,5 +179,142 @@ public class JSONTest: TestCase() {
             assertEquals(3.0, map["bar"]!!.doubleValue)
             assertEquals("5", map["baz"]!!.stringValue)
         }
+    }
+
+    public fun testBooleanValue() {
+        if (true) {
+            val json = JSON("""true""".toByteArray())
+            assertEquals(true, json.booleanValue)
+        }
+
+        if (true) {
+            val json = JSON("""false""".toByteArray())
+            assertEquals(false, json.booleanValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(false, json.booleanValue)
+        }
+    }
+
+    public fun testIntValue() {
+        if (true) {
+            val json = JSON("""42""".toByteArray())
+            assertEquals(42, json.intValue)
+        }
+
+        if (true) {
+            val json = JSON("""0""".toByteArray())
+            assertEquals(0, json.intValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(0, json.intValue)
+        }
+    }
+
+    public fun testLongValue() {
+        if (true) {
+            val json = JSON("""42""".toByteArray())
+            assertEquals(42L, json.longValue)
+        }
+
+        if (true) {
+            val json = JSON("""0""".toByteArray())
+            assertEquals(0L, json.longValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(0L, json.longValue)
+        }
+    }
+
+    public fun testDoubleValue() {
+        if (true) {
+            val json = JSON("""42.0""".toByteArray())
+            assertEquals(42.0, json.doubleValue)
+        }
+
+        if (true) {
+            val json = JSON("""0.0""".toByteArray())
+            assertEquals(0.0, json.doubleValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(0.0, json.doubleValue)
+        }
+    }
+
+    public fun testStringValue() {
+        if (true) {
+            val json = JSON(""""KotlinyJSON"""".toByteArray())
+            assertEquals("KotlinyJSON", json.stringValue)
+        }
+
+        if (true) {
+            val json = JSON("""""""".toByteArray())
+            assertEquals("", json.stringValue)
+        }
+    }
+
+    public fun testListValue() {
+        if (true) {
+            val json = JSON("""[2, 3, 5]""".toByteArray())
+            assertEquals(JSON(2), JSON(2))
+            assertEquals(listOf(JSON(2), JSON(3), JSON(5)), listOf(JSON(2), JSON(3), JSON(5)))
+            assertEquals(listOf(JSON(2), JSON(3), JSON(5)), json.listValue)
+        }
+
+        if (true) {
+            val json = JSON("""[]""".toByteArray())
+            assertEquals(listOf<Int>(), json.listValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(listOf<Int>(), json.listValue)
+        }
+    }
+
+    public fun testMapValue() {
+        if (true) {
+            val json = JSON("""{"a": 2, "b": 3, "c": 5}""".toByteArray())
+            assertEquals(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5))), json.mapValue)
+        }
+
+        if (true) {
+            val json = JSON("""{}""".toByteArray())
+            assertEquals(mapOf<String, Int>(), json.mapValue)
+        }
+
+        if (true) {
+            val json = JSON("""null""".toByteArray())
+            assertEquals(mapOf<String, Int>(), json.mapValue)
+        }
+    }
+
+    public fun testEquals() {
+        assertEquals(JSON(true), JSON(true))
+        assertEquals(JSON(42), JSON(42))
+        assertEquals(JSON(42L), JSON(42L))
+        assertEquals(JSON(42.0), JSON(42.0))
+        assertEquals(JSON("KotlinyJSON"), JSON("KotlinyJSON"))
+        assertEquals(JSON(listOf(JSON(2), JSON(3), JSON(5))), JSON(listOf(JSON(2), JSON(3), JSON(5))))
+        assertEquals(JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))), JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))))
+        assertEquals(JSON("null".toByteArray()), JSON("null".toByteArray()))
+
+        assertFalse(JSON(true)== JSON(false))
+        assertFalse(JSON(42)== JSON(0))
+        assertFalse(JSON(42L)== JSON(0L))
+        assertFalse(JSON(42.0)== JSON(0.0))
+        assertFalse(JSON("KotlinyJSON") == JSON(""))
+        assertFalse(JSON(listOf(JSON(2), JSON(3), JSON(5))) == JSON(listOf()))
+        assertFalse(JSON(mapOf(Pair("a", JSON(2)), Pair("b", JSON(3)), Pair("c", JSON(5)))) == JSON(mapOf()))
+        assertFalse(JSON("null".toByteArray()) == JSON(false))
+
     }
 }
